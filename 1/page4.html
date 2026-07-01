@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Игра вопросов</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+h1 {
+    color: white;
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+input {
+    width: 250px;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: white;
+    font-weight: bold;
+}
+
+#btns {
+    display: none;
+    position: relative;
+    height: 200px;
+}
+
+#noBtn {
+    position: absolute;
+    left: 60px;
+    top: 60px;
+    transition: 0.15s;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Почему ты любишь потрепать мне нервы?</h1>
+
+    <input id="inputBox" type="text" placeholder="Напиши ответ..." />
+    <br>
+
+    <button id="mainBtn" onclick="send()">Отправить</button>
+
+    <div id="btns">
+        <button onclick="yes()">Да</button>
+        <button id="noBtn" onclick="runAway()">Нет</button>
+    </div>
+</div>
+
+<script>
+let step = 0;
+
+function send() {
+    const title = document.querySelector("h1");
+    const input = document.getElementById("inputBox");
+
+    step++;
+
+    if (step === 1) {
+        title.innerText = "Какой твой любимый роман?";
+    }
+
+    else if (step === 2) {
+        alert("Напиши роман");
+    }
+
+    else if (step === 3) {
+        title.innerText = "Почему именно этот роман?";
+    }
+
+    else if (step === 4) {
+        title.innerText = "Как тебе этот сайт?";
+    }
+
+    else if (step === 5) {
+        title.innerText = "Ты красивая?";
+
+        input.style.display = "none";
+        document.getElementById("mainBtn").style.display = "none";
+
+        document.getElementById("btns").style.display = "block";
+    }
+
+    input.value = "";
+}
+
+/* ДА */
+function yes() {
+    document.querySelector("h1").innerText = "Я знал";
+    document.getElementById("btns").style.display = "none";
+}
+
+/* НЕТ убегает внутри блока */
+function runAway() {
+    const btn = document.getElementById("noBtn");
+    const box = document.getElementById("btns");
+
+    const x = Math.random() * (box.clientWidth - 80);
+    const y = Math.random() * (box.clientHeight - 50);
+
+    btn.style.left = x + "px";
+    btn.style.top = y + "px";
+}
+</script>
+
+<script>
+function createHeart() {
+    const heart = document.createElement("div");
+
+    const emojis = ["💖","💗","🎀","💫","✨","⭐","🌸","💭"];
+
+    heart.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+
+    heart.style.position = "fixed";
+
+    // Только по бокам
+    if (Math.random() < 0.5) {
+        heart.style.left = (Math.random() * 15) + "vw";
+    } else {
+        heart.style.left = (85 + Math.random() * 15) + "vw";
+    }
+
+    heart.style.bottom = "-50px";
+    heart.style.fontSize = (18 + Math.random() * 20) + "px";
+    heart.style.pointerEvents = "none";
+    heart.style.zIndex = "1";
+
+    document.body.appendChild(heart);
+
+    let pos = -50;
+
+    const animation = setInterval(() => {
+        pos += 2;
+        heart.style.bottom = pos + "px";
+
+        if (pos > window.innerHeight + 100) {
+            clearInterval(animation);
+            heart.remove();
+        }
+    }, 16);
+}
+
+setInterval(createHeart, 120);
+</script>
+</body>
+</html>
