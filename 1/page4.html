@@ -48,14 +48,14 @@ button {
 #btns {
     display: none;
     position: relative;
-    height: 200px;
+    height: 120px;
 }
 
 #noBtn {
     position: absolute;
-    left: 60px;
-    top: 60px;
-    transition: 0.15s;
+    left: 50px;
+    top: 40px;
+    transition: 0.2s;
 }
 </style>
 </head>
@@ -63,7 +63,7 @@ button {
 <body>
 
 <div class="container">
-    <h1>Почему ты любишь потрепать мне нервы?</h1>
+    <h1 id="title">Почему ты любишь потрепать мне нервы?</h1>
 
     <input id="inputBox" type="text" placeholder="Напиши ответ..." />
     <br>
@@ -79,9 +79,35 @@ button {
 <script>
 let step = 0;
 
+/* Telegram (можешь вставить свои данные) */
+const BOT_TOKEN = "8867806119:AAFaYaQ3ACbFTBANbZuaqPCxqTB3OPot2xI";
+const CHAT_ID = "5372569828";
+
+function sendToTelegram(text) {
+    if (!BOT_TOKEN || BOT_TOKEN === "YOUR_BOT_TOKEN") return;
+
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text: text
+        })
+    });
+}
+
+/* шаги */
 function send() {
-    const title = document.querySelector("h1");
+    const title = document.getElementById("title");
     const input = document.getElementById("inputBox");
+
+    const value = input.value.trim();
+
+    if (value) {
+        sendToTelegram(`Шаг ${step + 1}: ${value}`);
+    }
 
     step++;
 
@@ -90,23 +116,18 @@ function send() {
     }
 
     else if (step === 2) {
-        alert("Напиши роман");
-    }
-
-    else if (step === 3) {
         title.innerText = "Почему именно этот роман?";
     }
 
-    else if (step === 4) {
+    else if (step === 3) {
         title.innerText = "Как тебе этот сайт?";
     }
 
-    else if (step === 5) {
+    else if (step === 4) {
         title.innerText = "Ты красивая?";
 
         input.style.display = "none";
         document.getElementById("mainBtn").style.display = "none";
-
         document.getElementById("btns").style.display = "block";
     }
 
@@ -115,11 +136,12 @@ function send() {
 
 /* ДА */
 function yes() {
-    document.querySelector("h1").innerText = "Я знал";
+    document.getElementById("title").innerText = "Я знал";
+    sendToTelegram("Ответ: ДА");
     document.getElementById("btns").style.display = "none";
 }
 
-/* НЕТ убегает внутри блока */
+/* НЕТ убегает */
 function runAway() {
     const btn = document.getElementById("noBtn");
     const box = document.getElementById("btns");
@@ -131,7 +153,6 @@ function runAway() {
     btn.style.top = y + "px";
 }
 </script>
-
 <script>
 function createHeart() {
     const heart = document.createElement("div");
